@@ -3,7 +3,7 @@ hyperskill_project:
   ide_files: https://cogniterra.org/media/attachments/lesson/32445/additional_files.json
   is_template_based: false
   use_ide: true
-update_date: "Tue, 04 Feb 2025 09:29:30 UTC"
+update_date: "Wed, 05 Feb 2025 13:04:52 UTC"
 stages:
   - id: 2281
     step: 35304
@@ -104,12 +104,14 @@ topics:
       theory_id: 3536
     - title: First glance at exceptions
       theory_id: 3497
+    - title: NullPointerException
+      theory_id: 1945
+    - title: What is object-oriented programming
+      theory_id: 3614
     - title: Hierarchy of exceptions
       theory_id: 3570
     - title: Exception handling
       theory_id: 3552
-    - title: NullPointerException
-      theory_id: 1945
     - title: Array exceptions
       theory_id: 1940
     - title: Defining classes

@@ -6,18 +6,60 @@ import java.util.Scanner;
 // Hyperskill Battleship with Java study project Stage 1/6 completed - https://hyperskill.org/projects/383/stages/2281/implement
 public class Main {
 
+
+    enum ShipType {
+        AIRCRAFT_CARRIER(5, "Aircraft Carrier"), BATTLESHIP(4, "Battleship"), SUBMARINE(3, "Submarine"), CRUISER(3, "Cruiser"), DESTROYER(2, "Destroyer");
+        private final int length;
+        private final String name;
+
+        ShipType(int length, String name) {
+            this.length = length;
+            this.name = name;
+        }
+    }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         String[][] field = createField(10, 10);
         printField(field);
-        ShipCoordinates coordinates = enterCoordinates(scanner);
-        if (coordinates == null) {
-            System.out.println("Error!");
-        } else {
-            System.out.println(placeShip(field, coordinates));
-        }
+
+        placeAllShips(scanner, field);
         scanner.close();
         //printField(field);
+    }
+
+    /**
+     * Asks the user to input coordinates for all ships necessary
+     *
+     * @param scanner {@link Scanner} to be used for the input
+     * @param field   2D Array field to add the ship to
+     */
+    static void placeAllShips(Scanner scanner, String[][] field) {
+        inputShip(scanner, field, ShipType.AIRCRAFT_CARRIER);
+        inputShip(scanner, field, ShipType.BATTLESHIP);
+        inputShip(scanner, field, ShipType.SUBMARINE);
+        inputShip(scanner, field, ShipType.CRUISER);
+        inputShip(scanner, field, ShipType.DESTROYER);
+    }
+
+    /**
+     * Asks the user to input coordinates for a single ship
+     * @param scanner {@link Scanner} to be used for input
+     * @param field 2D Array field to place the ship on
+     * @param shipType {@link ShipType} obj of the ship the user needs to place
+     */
+    static void inputShip(Scanner scanner, String[][] field, ShipType shipType) {
+        do {
+            System.out.println("Enter the coordinates of the " + shipType.name + "(" + shipType.length + " cells):");
+            ShipCoordinates coordinates = enterCoordinates(scanner, shipType);
+            if (coordinates == null) {
+                System.out.println("Error!");
+            } else {
+                placeShip(field, coordinates);
+                printField(field);
+                break;
+            }
+        } while (true);
     }
 
     /**
@@ -26,28 +68,34 @@ public class Main {
      * @param scanner {@link Scanner} object to be used for the input
      * @return {@link  ShipCoordinates} object with the coordinates from the input
      */
-    static ShipCoordinates enterCoordinates(Scanner scanner) {
-        System.out.println("Enter the coordinates of the ship:");
+    static ShipCoordinates enterCoordinates(Scanner scanner, ShipType shipType) {
         String coordinates = scanner.nextLine();
 
         String[] parts = coordinates.split(" ");
 
         String beginning = parts[0];
         String ending = parts[1];
-        int startX = Integer.parseInt(beginning.substring(1)) - 1; // Extract full number
-        int startY = beginning.charAt(0) - 'A';
-        int endX = Integer.parseInt(ending.substring(1)) - 1; // Extract full number
-        int endY = ending.charAt(0) - 'A';
+        int columnOne = Integer.parseInt(beginning.substring(1)) - 1; // Extract full number
+        int rowOne = beginning.charAt(0) - 'A';
+        int columnTwo = Integer.parseInt(ending.substring(1)) - 1; // Extract full number
+        int rowTwo = ending.charAt(0) - 'A';
 
-        if (startX != endX && startY != endY) {
+        int length = Math.max(Math.abs(columnOne - columnTwo), Math.abs(rowOne - rowTwo)) + 1;
+
+        //TODO: need to add proper error responses
+        //TODO: need to check whether it's adjacent to other ships as it's part of the rules
+        //TODO: need to check if the spot is already not taken by another ship
+        if (length != shipType.length) {
             return null;
-        } else if (startX >= 10 || startY > 10 || endX >= 10 || endY > 10) { //out of bounds
+        } else if (columnOne != columnTwo && rowOne != rowTwo) {
             return null;
-        } else if (startX < 0 || endX < 0) {
+        } else if (columnOne >= 10 || rowOne > 10 || columnTwo >= 10 || rowTwo > 10) { //out of bounds
+            return null;
+        } else if (columnOne < 0 || columnTwo < 0) {
             return null;
         }
 
-        return new ShipCoordinates(startX, startY, endX, endY);
+        return new ShipCoordinates(columnOne, rowOne, columnTwo, rowTwo);
     }
 
     /**
@@ -58,21 +106,21 @@ public class Main {
      * @return {@link ShipInfo} object with information
      */
     static ShipInfo placeShip(String[][] field, ShipCoordinates shipCoordinates) {
-        int startX = shipCoordinates.startX, startY = shipCoordinates.startY;
-        int endX = shipCoordinates.endX, endY = shipCoordinates.endY;
+        int columnOne = shipCoordinates.columnOne, rowOne = shipCoordinates.rowOne;
+        int columnTwo = shipCoordinates.columnTwo, rowTwo = shipCoordinates.rowTwo;
 
-        int length = Math.max(Math.abs(startX - endX), Math.abs(startY - endY)) + 1;
+        int length = Math.max(Math.abs(columnOne - columnTwo), Math.abs(rowOne - rowTwo)) + 1;
 
         StringBuilder shipParts = new StringBuilder();
-        if (startX == endX) { // Horizontal placement
-            for (int col = Math.min(startY, endY); col <= Math.max(startY, endY); col++) {
-                field[startX][col] = "O";
-                shipParts.append((char) (col + 'A')).append(startX + 1).append(" ");
+        if (columnOne == columnTwo) { // Horizontal placement
+            for (int row = Math.min(rowOne, rowTwo); row <= Math.max(rowOne, rowTwo); row++) {
+                field[row][columnOne] = "O";
+                shipParts.append((char) (rowOne + 'A')).append(row + 1).append(" ");
             }
-        } else if (startY == endY) {
-            for (int row = Math.min(startX, endX); row <= Math.max(startX, endX); row++) {
-                field[startY][row] = "O";
-                shipParts.append((char) (startY + 'A')).append(row + 1).append(" ");
+        } else if (rowOne == rowTwo) { // Vertical placement
+            for (int col = Math.min(columnOne, columnTwo); col <= Math.max(columnOne, columnTwo); col++) {
+                field[rowOne][col] = "O";
+                shipParts.append((char) (col + 'A')).append(columnOne + 1).append(" ");
             }
         }
         return new ShipInfo(length, shipParts.toString());
@@ -146,12 +194,14 @@ class ShipInfo {
  * Helper class to contain coordinates.
  */
 class ShipCoordinates {
-    int startX, startY, endX, endY;
+    int columnOne, rowOne, columnTwo, rowTwo;
 
-    public ShipCoordinates(int startX, int startY, int endX, int endY) {
-        this.startX = startX;
-        this.startY = startY;
-        this.endX = endX;
-        this.endY = endY;
+    //        return new ShipCoordinates(columnOne, rowOne, columnTwo, rowTwo);
+    public ShipCoordinates(int columnOne, int rowOne, int columnTwo, int rowTwo) {
+        this.columnOne = columnOne;
+        this.rowOne = rowOne;
+        this.columnTwo = columnTwo;
+        this.rowTwo = rowTwo;
     }
 }
+
