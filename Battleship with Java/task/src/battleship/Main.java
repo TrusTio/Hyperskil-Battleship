@@ -3,7 +3,22 @@ package battleship;
 import java.util.Arrays;
 import java.util.Scanner;
 
-// Hyperskill Battleship with Java study project Stage 1/6 completed - https://hyperskill.org/projects/383/stages/2281/implement
+/* Hyperskill Battleship with Java study project Stage 2/6 completed - https://hyperskill.org/projects/383/stages/2281/implement
+You have 5 ships:
+1. Aircraft Carrier is 5 cells
+2. Battleship is 4 cells
+3. Submarine is 3 cells
+4. Cruiser is also 3 cells
+5. Destroyer is 2 cells.
+
+In this stage, you should arrange them all on the game field.
+1. Start placing your ships with the largest one.
+2. For each ship read two coordinates: the beginning and the end of the ship. Again, the order of the coordinates does not matter.
+A3. dd new ships to a game field and output it the same way as in the previous stage.
+4. If the user has entered coordinates in such a way that the length of the created ship does not match the expected length,
+this should be considered an incorrect input. Also, the game rules state that ships cannot be adjacent to each other. For both of these cases report it
+with a message containing Error word.
+ */
 public class Main {
 
 
@@ -44,17 +59,27 @@ public class Main {
 
     /**
      * Asks the user to input coordinates for a single ship
-     * @param scanner {@link Scanner} to be used for input
-     * @param field 2D Array field to place the ship on
+     *
+     * @param scanner  {@link Scanner} to be used for input
+     * @param field    2D Array field to place the ship on
      * @param shipType {@link ShipType} obj of the ship the user needs to place
      */
     static void inputShip(Scanner scanner, String[][] field, ShipType shipType) {
+        System.out.println("Enter the coordinates of the " + shipType.name + "(" + shipType.length + " cells):");
         do {
-            System.out.println("Enter the coordinates of the " + shipType.name + "(" + shipType.length + " cells):");
-            ShipCoordinates coordinates = enterCoordinates(scanner, shipType);
-            if (coordinates == null) {
+            ShipCoordinates coordinates = null;
+            try {
+                coordinates = enterCoordinates(scanner, field, shipType);
+            } catch (WrongLengthException e) {
+                System.out.println("Error! Wrong length of the " + shipType.name + "! Try again:");
+            } catch (WrongLocationException e) {
+                System.out.println("Error! Wrong ship location! Try again:");
+            } catch (AdjacentLocationException e) {
+                System.out.println("Error! You placed it too close to another one. Try again:");
+            } catch (Exception e) {
                 System.out.println("Error!");
-            } else {
+            }
+            if (coordinates != null) {
                 placeShip(field, coordinates);
                 printField(field);
                 break;
@@ -65,10 +90,13 @@ public class Main {
     /**
      * Method prompting for coordinate input and validates it.
      *
-     * @param scanner {@link Scanner} object to be used for the input
+     * @param scanner  {@link Scanner} object to be used for the input
+     * @param field    2D array field to check for adjacent/existing ships.
+     * @param shipType {@link ShipType} object to be used for ship type information
      * @return {@link  ShipCoordinates} object with the coordinates from the input
+     * @throws Exception when the coordinates are incorrect
      */
-    static ShipCoordinates enterCoordinates(Scanner scanner, ShipType shipType) {
+    static ShipCoordinates enterCoordinates(Scanner scanner, String[][] field, ShipType shipType) throws Exception {
         String coordinates = scanner.nextLine();
 
         String[] parts = coordinates.split(" ");
@@ -82,20 +110,58 @@ public class Main {
 
         int length = Math.max(Math.abs(columnOne - columnTwo), Math.abs(rowOne - rowTwo)) + 1;
 
-        //TODO: need to add proper error responses
-        //TODO: need to check whether it's adjacent to other ships as it's part of the rules
-        //TODO: need to check if the spot is already not taken by another ship
         if (length != shipType.length) {
-            return null;
+            throw new WrongLengthException("Error! Wrong length");
         } else if (columnOne != columnTwo && rowOne != rowTwo) {
-            return null;
-        } else if (columnOne >= 10 || rowOne > 10 || columnTwo >= 10 || rowTwo > 10) { //out of bounds
-            return null;
+            throw new WrongLengthException("Error! Wrong ship location - needs to be in a straight line.");
+        } else if (columnOne >= 10 || rowOne >= 10 || columnTwo >= 10 || rowTwo >= 10) { //out of bounds
+            throw new WrongLengthException("Error! Wrong ship location - out of bounds.");
         } else if (columnOne < 0 || columnTwo < 0) {
-            return null;
+            throw new WrongLengthException("Error! Wrong ship location - out of bounds.");
         }
 
+        // Check for Adjacent ships
+        if (columnOne == columnTwo) { // Vertical placement check
+            for (int row = Math.min(rowOne, rowTwo); row <= Math.max(rowOne, rowTwo); row++) {
+                checkNeighbors(field, row, columnOne);
+            }
+        } else { // Horizontal placement check
+            for (int col = Math.min(columnOne, columnTwo); col <= Math.max(columnOne, columnTwo); col++) {
+                checkNeighbors(field, rowOne, col);
+            }
+        }
         return new ShipCoordinates(columnOne, rowOne, columnTwo, rowTwo);
+    }
+
+    /**
+     * Checks the adjacent positions in the field
+     *
+     * @param field 2d Array field to use
+     * @param row   current row position to check adjacent of
+     * @param col   current col position to check adjacent of
+     * @throws AdjacentLocationException thrown if a ship is found at adjacent location
+     */
+    static void checkNeighbors(String[][] field, int row, int col) throws AdjacentLocationException {
+        int rows = field.length;
+        int cols = field[0].length;
+
+        int[][] directions = {
+                {-1, 0},  // Up
+                {1, 0},   // Down
+                {0, -1},  // Left
+                {0, 1}    // Right
+        };
+
+        for (int[] dir : directions) {
+            int newRow = row + dir[0]; // Adjust row
+            int newCol = col + dir[1]; // Adjust column
+
+            if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols) {
+                if (field[newRow][newCol].equals("O")) {
+                    throw new AdjacentLocationException("Ship at adjacent location present");
+                }
+            }
+        }
     }
 
     /**
@@ -106,25 +172,26 @@ public class Main {
      * @return {@link ShipInfo} object with information
      */
     static ShipInfo placeShip(String[][] field, ShipCoordinates shipCoordinates) {
-        int columnOne = shipCoordinates.columnOne, rowOne = shipCoordinates.rowOne;
-        int columnTwo = shipCoordinates.columnTwo, rowTwo = shipCoordinates.rowTwo;
+        int columnOne = shipCoordinates.getColumnOne(), rowOne = shipCoordinates.getRowOne();
+        int columnTwo = shipCoordinates.getColumnTwo(), rowTwo = shipCoordinates.getRowTwo();
 
         int length = Math.max(Math.abs(columnOne - columnTwo), Math.abs(rowOne - rowTwo)) + 1;
 
         StringBuilder shipParts = new StringBuilder();
-        if (columnOne == columnTwo) { // Horizontal placement
+        if (columnOne == columnTwo) { // Vertical placement
             for (int row = Math.min(rowOne, rowTwo); row <= Math.max(rowOne, rowTwo); row++) {
                 field[row][columnOne] = "O";
-                shipParts.append((char) (rowOne + 'A')).append(row + 1).append(" ");
+                shipParts.append((char) (row + 'A')).append(columnOne + 1).append(" ");
             }
-        } else if (rowOne == rowTwo) { // Vertical placement
+        } else if (rowOne == rowTwo) { // Horizontal placement
             for (int col = Math.min(columnOne, columnTwo); col <= Math.max(columnOne, columnTwo); col++) {
                 field[rowOne][col] = "O";
-                shipParts.append((char) (col + 'A')).append(columnOne + 1).append(" ");
+                shipParts.append((char) (rowOne + 'A')).append(col + 1).append(" ");
             }
         }
         return new ShipInfo(length, shipParts.toString());
     }
+
 
     /**
      * Creates a field with the given rows and columns.
@@ -194,14 +261,29 @@ class ShipInfo {
  * Helper class to contain coordinates.
  */
 class ShipCoordinates {
-    int columnOne, rowOne, columnTwo, rowTwo;
+    private int columnOne, rowOne, columnTwo, rowTwo;
 
-    //        return new ShipCoordinates(columnOne, rowOne, columnTwo, rowTwo);
     public ShipCoordinates(int columnOne, int rowOne, int columnTwo, int rowTwo) {
         this.columnOne = columnOne;
         this.rowOne = rowOne;
         this.columnTwo = columnTwo;
         this.rowTwo = rowTwo;
+    }
+
+    public int getColumnOne() {
+        return columnOne;
+    }
+
+    public int getRowOne() {
+        return rowOne;
+    }
+
+    public int getColumnTwo() {
+        return columnTwo;
+    }
+
+    public int getRowTwo() {
+        return rowTwo;
     }
 }
 

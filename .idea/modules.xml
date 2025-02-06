@@ -12,6 +12,12 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/util/Hyperskil-Battleship.util.iml" filepath="$PROJECT_DIR$/.idea/modules/util/Hyperskil-Battleship.util.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/util/Hyperskil-Battleship.util.main.iml" filepath="$PROJECT_DIR$/.idea/modules/util/Hyperskil-Battleship.util.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/util/Hyperskil-Battleship.util.test.iml" filepath="$PROJECT_DIR$/.idea/modules/util/Hyperskil-Battleship.util.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/util/IntelliJ idea projects.Hyperskil-Battleship.util.iml" filepath="$PROJECT_DIR$/.idea/modules/util/IntelliJ idea projects.Hyperskil-Battleship.util.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/util/IntelliJ idea projects.Hyperskil-Battleship.util.main.iml" filepath="$PROJECT_DIR$/.idea/modules/util/IntelliJ idea projects.Hyperskil-Battleship.util.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/util/IntelliJ idea projects.Hyperskil-Battleship.util.test.iml" filepath="$PROJECT_DIR$/.idea/modules/util/IntelliJ idea projects.Hyperskil-Battleship.util.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Battleship with Java/task/task.Hyperskil-Battleship.Battleship_with_Java-task.iml" filepath="$PROJECT_DIR$/.idea/modules/Battleship with Java/task/task.Hyperskil-Battleship.Battleship_with_Java-task.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Battleship with Java/task/task.Hyperskil-Battleship.Battleship_with_Java-task.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Battleship with Java/task/task.Hyperskil-Battleship.Battleship_with_Java-task.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Battleship with Java/task/task.Hyperskil-Battleship.Battleship_with_Java-task.test.iml" filepath="$PROJECT_DIR$/.idea/modules/Battleship with Java/task/task.Hyperskil-Battleship.Battleship_with_Java-task.test.iml" />
     </modules>
   </component>
 </project>
