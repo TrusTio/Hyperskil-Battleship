@@ -3,21 +3,14 @@ package battleship;
 import java.util.Arrays;
 import java.util.Scanner;
 
-/* Hyperskill Battleship with Java study project Stage 2/6 completed - https://hyperskill.org/projects/383/stages/2281/implement
-You have 5 ships:
-1. Aircraft Carrier is 5 cells
-2. Battleship is 4 cells
-3. Submarine is 3 cells
-4. Cruiser is also 3 cells
-5. Destroyer is 2 cells.
+/* Hyperskill Battleship with Java study project Stage 3/6 completed - https://hyperskill.org/projects/383/stages/2281/implement
 
-In this stage, you should arrange them all on the game field.
-1. Start placing your ships with the largest one.
-2. For each ship read two coordinates: the beginning and the end of the ship. Again, the order of the coordinates does not matter.
-A3. dd new ships to a game field and output it the same way as in the previous stage.
-4. If the user has entered coordinates in such a way that the length of the created ship does not match the expected length,
-this should be considered an incorrect input. Also, the game rules state that ships cannot be adjacent to each other. For both of these cases report it
-with a message containing Error word.
+Take a shot at a prepared game field. You need to indicate the coordinates of the target,
+and the program should then display a message about a hit or a miss.
+If the shell misses the target and falls in the water, this cell should be marked with an M, and a
+successful strike is marked by an X. After this shot, the game should be stopped.
+
+If the player managed to hit a ship, the game should display a message You hit a ship!; otherwise, the message is You missed!
  */
 public class Main {
 
@@ -39,8 +32,41 @@ public class Main {
         printField(field);
 
         placeAllShips(scanner, field);
+        System.out.println("The Game starts!");
+        printField(field);
+        shootShip(scanner, field);
+        printField(field);
         scanner.close();
-        //printField(field);
+
+    }
+
+    /**
+     * Asks for input coordinates, validates them and check if a ship was shot or missed.
+     * Updates the field with the missed coordinate "M" or hit ship with "X"
+     *
+     * @param scanner {@link  Scanner} to be used for input
+     * @param field   2D String array of the field
+     */
+    static void shootShip(Scanner scanner, String[][] field) {
+        System.out.println("Take a shot!");
+        String coordinate;
+        do {
+            coordinate = scanner.nextLine();
+            int column = Integer.parseInt(coordinate.substring(1)) - 1; // Extract full number
+            int row = coordinate.charAt(0) - 'A';
+            if (column >= 10 || row >= 10 || column < 0 || row < 0) {
+                System.out.println("Error! You entered the wrong coordinates! Try again:");
+            } else {
+                if (field[row][column].equals("O")) {
+                    field[row][column] = "X";
+                    System.out.println("You hit a ship!");
+                } else {
+                    field[row][column] = "M";
+                    System.out.println("You missed!");
+                }
+                break;
+            }
+        } while (true);
     }
 
     /**
