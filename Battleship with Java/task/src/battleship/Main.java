@@ -3,14 +3,12 @@ package battleship;
 import java.util.Arrays;
 import java.util.Scanner;
 
-/* Hyperskill Battleship with Java study project Stage 3/6 completed - https://hyperskill.org/projects/383/stages/2281/implement
+/* Hyperskill Battleship with Java study project Stage 4/6 completed - https://hyperskill.org/projects/383/stages/2281/implement
 
-Take a shot at a prepared game field. You need to indicate the coordinates of the target,
-and the program should then display a message about a hit or a miss.
-If the shell misses the target and falls in the water, this cell should be marked with an M, and a
-successful strike is marked by an X. After this shot, the game should be stopped.
-
-If the player managed to hit a ship, the game should display a message You hit a ship!; otherwise, the message is You missed!
+In this stage, you need to implement the "fog of war" feature in your game.
+First, place all the ships on the game field, and then hide them with the symbol ~.
+Take a shot like in the previous stage, and after your attempt, the program should print a
+message along with two versions of the field: one covered with the fog of war and the other one uncovered.
  */
 public class Main {
 
@@ -28,26 +26,27 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        String[][] field = createField(10, 10);
-        printField(field);
+        String[][] visibleField = createField(10, 10);
+        String[][] fogOfWarField = createField(10, 10);
+        printField(visibleField);
 
-        placeAllShips(scanner, field);
+        placeAllShips(scanner, visibleField);
         System.out.println("The Game starts!");
-        printField(field);
-        shootShip(scanner, field);
-        printField(field);
+        printField(fogOfWarField);
+        shootShip(scanner, visibleField, fogOfWarField);
         scanner.close();
-
     }
 
     /**
      * Asks for input coordinates, validates them and check if a ship was shot or missed.
-     * Updates the field with the missed coordinate "M" or hit ship with "X"
+     * Updates both fields with the missed coordinate "M" or hit ship with "X"
+     * Prints the fog of war field with the mark initially, outputs whether you hit or missed and then prints the visible field
      *
-     * @param scanner {@link  Scanner} to be used for input
-     * @param field   2D String array of the field
+     * @param scanner       {@link  Scanner} to be used for input
+     * @param visibleField  2D String array representing the visible field
+     * @param fogOfWarField 2D String array representing the fog of war field
      */
-    static void shootShip(Scanner scanner, String[][] field) {
+    static void shootShip(Scanner scanner, String[][] visibleField, String[][] fogOfWarField) {
         System.out.println("Take a shot!");
         String coordinate;
         do {
@@ -57,12 +56,18 @@ public class Main {
             if (column >= 10 || row >= 10 || column < 0 || row < 0) {
                 System.out.println("Error! You entered the wrong coordinates! Try again:");
             } else {
-                if (field[row][column].equals("O")) {
-                    field[row][column] = "X";
+                if (visibleField[row][column].equals("O")) {
+                    visibleField[row][column] = "X";
+                    fogOfWarField[row][column] = "X";
+                    printField(fogOfWarField);
                     System.out.println("You hit a ship!");
+                    printField(visibleField);
                 } else {
-                    field[row][column] = "M";
+                    visibleField[row][column] = "M";
+                    fogOfWarField[row][column] = "M";
+                    printField(fogOfWarField);
                     System.out.println("You missed!");
+                    printField(visibleField);
                 }
                 break;
             }

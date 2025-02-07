@@ -7,6 +7,18 @@ files:
   - name: test/Tests.java
     visible: false
     learner_created: false
+  - name: src/battleship/WrongLengthException.java
+    visible: true
+    learner_created: true
+  - name: src/battleship/AdjacentLocationException.java
+    visible: true
+    learner_created: true
+  - name: src/battleship/WrongLocationException.java
+    visible: true
+    learner_created: true
 feedback_link: https://hyperskill.org/learn/step/35307#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Fri, 07 Feb 2025 10:31:55 UTC"
 record: -1
