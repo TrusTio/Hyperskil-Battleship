@@ -5,14 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-/* Hyperskill Battleship with Java study project Stage 5/6 completed - https://hyperskill.org/projects/383/stages/2285/implement
+/* Hyperskill Battleship with Java study project Stage 6/6 WIP - https://hyperskill.org/projects/383/stages/2286/implement
 
-To complete this step, you should add a check that all the ships were successfully sunk.
-The game is supposed to go on until all ships go down. The program should print an extra message You sank a ship!
-when all the cells of a particular ship have been hit. Take a look at the examples below!
-
-For the sake of simplicity; the project does not consider shots to coordinates that are already shot at to be any different.
-Regardless of whether the coordinate was previously a hit or a miss, you should display You hit a ship! and You missed! again respectively.
  */
 public class Main {
 
@@ -30,28 +24,33 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        String[][] visibleField = createField(10, 10);
-        String[][] fogOfWarField = createField(10, 10);
-        printField(visibleField);
+        String[][] visibleFieldOne = createField(10, 10);
+        String[][] fogOfWarFieldOne = createField(10, 10);
+        String[][] visibleFieldTwo = createField(10, 10);
+        String[][] fogOfWarFieldTwo = createField(10, 10);
 
-        playGame(scanner, visibleField, fogOfWarField);
+        playGame(scanner, visibleFieldOne, fogOfWarFieldOne, visibleFieldTwo, fogOfWarFieldTwo);
         scanner.close();
     }
 
     /**
      * Starts a fully fledged game
      *
-     * @param scanner       {@link  Scanner} to be used for input
-     * @param visibleField  2D String array representing the visible field
-     * @param fogOfWarField 2D String array representing the fog of war field
+     * @param scanner          {@link  Scanner} to be used for input
+     * @param visibleFieldOne  2D String array representing the visible field
+     * @param fogOfWarFieldOne 2D String array representing the fog of war field
      */
-    static void playGame(Scanner scanner, String[][] visibleField, String[][] fogOfWarField) {
-        List<Ship> shipList = placeAllShips(scanner, visibleField);
+    static void playGame(Scanner scanner, String[][] visibleFieldOne, String[][] fogOfWarFieldOne, String[][] visibleFieldTwo, String[][] fogOfWarFieldTwo) {
+        List<Ship> shipList = placeAllShips(scanner, visibleFieldOne, visibleFieldTwo);
+        List<Ship> playerOneShipList = shipList.subList(0, 4);
+        List<Ship> playerTwoShipList = shipList.subList(4, 9);
         System.out.println("The Game starts!");
-        printField(fogOfWarField);
+        printField(fogOfWarFieldOne);
         System.out.println("Take a shot!");
+        // TODO: need to alternate between the two players here
+        // TODO: need to alter the winning logic here to be to the sublist (all ships of one players sunk)
         do {
-            shootShip(scanner, visibleField, fogOfWarField, shipList);
+            shootShip(scanner, visibleFieldOne, fogOfWarFieldOne, shipList);
         } while (!shipList.stream().allMatch(Ship::isSunk)); // check if all ships have been sunk, if not, continue with the loop
         System.out.println("You sank the last ship. You won. Congratulations!");
     }
@@ -79,7 +78,7 @@ public class Main {
                 if (visibleField[row][column].equals("O") || visibleField[row][column].equals("X")) {
                     visibleField[row][column] = "X";
                     fogOfWarField[row][column] = "X";
-                    printField(fogOfWarField);
+                    printField(fogOfWarField); // TODO: need to print both fields (for player one and player two)
                     for (Ship ship : shipList) {
                         ShipCoordinates shipCoordinates = ship.getShipCoordinates();
                         if (row >= Math.min(shipCoordinates.getRowOne(), shipCoordinates.getRowTwo()) && row <= Math.max(shipCoordinates.getRowOne(), shipCoordinates.getRowTwo()) && column >= Math.min(shipCoordinates.getColumnOne(), shipCoordinates.getColumnTwo()) && column <= Math.max(shipCoordinates.getColumnOne(), shipCoordinates.getColumnTwo())) {
@@ -107,17 +106,28 @@ public class Main {
     /**
      * Asks the user to input coordinates for all ships necessary
      *
-     * @param scanner {@link Scanner} to be used for the input
-     * @param field   2D Array field to add the ship to
+     * @param scanner         {@link Scanner} to be used for the input
+     * @param visibleFieldOne 2D Array visibleFieldOne to add the ship to
      * @return {@link List} with all the Ship objects.
      */
-    static List<Ship> placeAllShips(Scanner scanner, String[][] field) {
+    static List<Ship> placeAllShips(Scanner scanner, String[][] visibleFieldOne, String[][] visibleFieldTwo) {
         List<Ship> shipsList = new ArrayList<>();
-        shipsList.add(inputShip(scanner, field, ShipType.AIRCRAFT_CARRIER));
-        shipsList.add(inputShip(scanner, field, ShipType.BATTLESHIP));
-        shipsList.add(inputShip(scanner, field, ShipType.SUBMARINE));
-        shipsList.add(inputShip(scanner, field, ShipType.CRUISER));
-        shipsList.add(inputShip(scanner, field, ShipType.DESTROYER));
+        System.out.println("Player 1, place your ships on the game field");
+        printField(visibleFieldOne);
+        shipsList.add(inputShip(scanner, visibleFieldOne, ShipType.AIRCRAFT_CARRIER));
+        shipsList.add(inputShip(scanner, visibleFieldOne, ShipType.BATTLESHIP));
+        shipsList.add(inputShip(scanner, visibleFieldOne, ShipType.SUBMARINE));
+        shipsList.add(inputShip(scanner, visibleFieldOne, ShipType.CRUISER));
+        shipsList.add(inputShip(scanner, visibleFieldOne, ShipType.DESTROYER));
+
+        System.out.println("Press Enter and pass the move to another player");
+        String string = scanner.nextLine();
+
+        shipsList.add(inputShip(scanner, visibleFieldTwo, ShipType.AIRCRAFT_CARRIER));
+        shipsList.add(inputShip(scanner, visibleFieldTwo, ShipType.BATTLESHIP));
+        shipsList.add(inputShip(scanner, visibleFieldTwo, ShipType.SUBMARINE));
+        shipsList.add(inputShip(scanner, visibleFieldTwo, ShipType.CRUISER));
+        shipsList.add(inputShip(scanner, visibleFieldTwo, ShipType.DESTROYER));
         return shipsList;
     }
 
