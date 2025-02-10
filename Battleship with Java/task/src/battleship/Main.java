@@ -1,14 +1,18 @@
 package battleship;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
-/* Hyperskill Battleship with Java study project Stage 4/6 completed - https://hyperskill.org/projects/383/stages/2281/implement
+/* Hyperskill Battleship with Java study project Stage 5/6 completed - https://hyperskill.org/projects/383/stages/2285/implement
 
-In this stage, you need to implement the "fog of war" feature in your game.
-First, place all the ships on the game field, and then hide them with the symbol ~.
-Take a shot like in the previous stage, and after your attempt, the program should print a
-message along with two versions of the field: one covered with the fog of war and the other one uncovered.
+To complete this step, you should add a check that all the ships were successfully sunk.
+The game is supposed to go on until all ships go down. The program should print an extra message You sank a ship!
+when all the cells of a particular ship have been hit. Take a look at the examples below!
+
+For the sake of simplicity; the project does not consider shots to coordinates that are already shot at to be any different.
+Regardless of whether the coordinate was previously a hit or a miss, you should display You hit a ship! and You missed! again respectively.
  */
 public class Main {
 
@@ -30,24 +34,40 @@ public class Main {
         String[][] fogOfWarField = createField(10, 10);
         printField(visibleField);
 
-        placeAllShips(scanner, visibleField);
-        System.out.println("The Game starts!");
-        printField(fogOfWarField);
-        shootShip(scanner, visibleField, fogOfWarField);
+        playGame(scanner, visibleField, fogOfWarField);
         scanner.close();
     }
 
     /**
-     * Asks for input coordinates, validates them and check if a ship was shot or missed.
-     * Updates both fields with the missed coordinate "M" or hit ship with "X"
-     * Prints the fog of war field with the mark initially, outputs whether you hit or missed and then prints the visible field
+     * Starts a fully fledged game
      *
      * @param scanner       {@link  Scanner} to be used for input
      * @param visibleField  2D String array representing the visible field
      * @param fogOfWarField 2D String array representing the fog of war field
      */
-    static void shootShip(Scanner scanner, String[][] visibleField, String[][] fogOfWarField) {
+    static void playGame(Scanner scanner, String[][] visibleField, String[][] fogOfWarField) {
+        List<Ship> shipList = placeAllShips(scanner, visibleField);
+        System.out.println("The Game starts!");
+        printField(fogOfWarField);
         System.out.println("Take a shot!");
+        do {
+            shootShip(scanner, visibleField, fogOfWarField, shipList);
+        } while (!shipList.stream().allMatch(Ship::isSunk)); // check if all ships have been sunk, if not, continue with the loop
+        System.out.println("You sank the last ship. You won. Congratulations!");
+    }
+
+    /**
+     * /**
+     * Asks for input coordinates, validates them and check if a ship was shot or missed.
+     * Updates both fields with the missed coordinate "M" or hit ship with "X".
+     * Checks which ship was hit and whether it was sunk
+     *
+     * @param scanner       {@link  Scanner} to be used for input
+     * @param visibleField  2D String array representing the visible field
+     * @param fogOfWarField 2D String array representing the fog of war field
+     * @param shipList      {@link List} of the placed ships
+     */
+    static void shootShip(Scanner scanner, String[][] visibleField, String[][] fogOfWarField, List<Ship> shipList) {
         String coordinate;
         do {
             coordinate = scanner.nextLine();
@@ -56,17 +76,27 @@ public class Main {
             if (column >= 10 || row >= 10 || column < 0 || row < 0) {
                 System.out.println("Error! You entered the wrong coordinates! Try again:");
             } else {
-                if (visibleField[row][column].equals("O")) {
+                if (visibleField[row][column].equals("O") || visibleField[row][column].equals("X")) {
                     visibleField[row][column] = "X";
                     fogOfWarField[row][column] = "X";
                     printField(fogOfWarField);
-                    System.out.println("You hit a ship!");
+                    for (Ship ship : shipList) {
+                        ShipCoordinates shipCoordinates = ship.getShipCoordinates();
+                        if (row >= Math.min(shipCoordinates.getRowOne(), shipCoordinates.getRowTwo()) && row <= Math.max(shipCoordinates.getRowOne(), shipCoordinates.getRowTwo()) && column >= Math.min(shipCoordinates.getColumnOne(), shipCoordinates.getColumnTwo()) && column <= Math.max(shipCoordinates.getColumnOne(), shipCoordinates.getColumnTwo())) {
+                            ship.registerHit();
+                            if (ship.isSunk()) {
+                                System.out.println("You sank a ship! Specify a new target:");
+                            } else {
+                                System.out.println("You hit a ship! Try again:");
+                            }
+                        }
+                    }
                     printField(visibleField);
                 } else {
                     visibleField[row][column] = "M";
                     fogOfWarField[row][column] = "M";
                     printField(fogOfWarField);
-                    System.out.println("You missed!");
+                    System.out.println("You missed. Try again:");
                     printField(visibleField);
                 }
                 break;
@@ -79,13 +109,16 @@ public class Main {
      *
      * @param scanner {@link Scanner} to be used for the input
      * @param field   2D Array field to add the ship to
+     * @return {@link List} with all the Ship objects.
      */
-    static void placeAllShips(Scanner scanner, String[][] field) {
-        inputShip(scanner, field, ShipType.AIRCRAFT_CARRIER);
-        inputShip(scanner, field, ShipType.BATTLESHIP);
-        inputShip(scanner, field, ShipType.SUBMARINE);
-        inputShip(scanner, field, ShipType.CRUISER);
-        inputShip(scanner, field, ShipType.DESTROYER);
+    static List<Ship> placeAllShips(Scanner scanner, String[][] field) {
+        List<Ship> shipsList = new ArrayList<>();
+        shipsList.add(inputShip(scanner, field, ShipType.AIRCRAFT_CARRIER));
+        shipsList.add(inputShip(scanner, field, ShipType.BATTLESHIP));
+        shipsList.add(inputShip(scanner, field, ShipType.SUBMARINE));
+        shipsList.add(inputShip(scanner, field, ShipType.CRUISER));
+        shipsList.add(inputShip(scanner, field, ShipType.DESTROYER));
+        return shipsList;
     }
 
     /**
@@ -95,7 +128,7 @@ public class Main {
      * @param field    2D Array field to place the ship on
      * @param shipType {@link ShipType} obj of the ship the user needs to place
      */
-    static void inputShip(Scanner scanner, String[][] field, ShipType shipType) {
+    static Ship inputShip(Scanner scanner, String[][] field, ShipType shipType) {
         System.out.println("Enter the coordinates of the " + shipType.name + "(" + shipType.length + " cells):");
         do {
             ShipCoordinates coordinates = null;
@@ -111,9 +144,9 @@ public class Main {
                 System.out.println("Error!");
             }
             if (coordinates != null) {
-                placeShip(field, coordinates);
+                Ship ship = placeShip(field, coordinates);
                 printField(field);
-                break;
+                return ship;
             }
         } while (true);
     }
@@ -176,8 +209,7 @@ public class Main {
         int rows = field.length;
         int cols = field[0].length;
 
-        int[][] directions = {
-                {-1, 0},  // Up
+        int[][] directions = {{-1, 0},  // Up
                 {1, 0},   // Down
                 {0, -1},  // Left
                 {0, 1}    // Right
@@ -200,9 +232,9 @@ public class Main {
      *
      * @param field           2D String array to place the ship on
      * @param shipCoordinates {@link ShipCoordinates} object with coordinates
-     * @return {@link ShipInfo} object with information
+     * @return {@link Ship} object with information
      */
-    static ShipInfo placeShip(String[][] field, ShipCoordinates shipCoordinates) {
+    static Ship placeShip(String[][] field, ShipCoordinates shipCoordinates) {
         int columnOne = shipCoordinates.getColumnOne(), rowOne = shipCoordinates.getRowOne();
         int columnTwo = shipCoordinates.getColumnTwo(), rowTwo = shipCoordinates.getRowTwo();
 
@@ -220,7 +252,7 @@ public class Main {
                 shipParts.append((char) (rowOne + 'A')).append(col + 1).append(" ");
             }
         }
-        return new ShipInfo(length, shipParts.toString());
+        return new Ship(length, shipParts.toString(), shipCoordinates);
     }
 
 
@@ -265,13 +297,29 @@ public class Main {
 /**
  * Helper class that contains ship information
  */
-class ShipInfo {
+class Ship {
     private final int length;
     private final String parts;
+    private ShipCoordinates shipCoordinates;
+    private int hits;
 
-    public ShipInfo(int length, String parts) {
+    public Ship(int length, String parts, ShipCoordinates shipCoordinates) {
         this.length = length;
         this.parts = parts;
+        this.shipCoordinates = shipCoordinates;
+        this.hits = 0;
+    }
+
+    public void registerHit() {
+        hits++;
+    }
+
+    public boolean isSunk() {
+        return hits >= length;
+    }
+
+    public ShipCoordinates getShipCoordinates() {
+        return shipCoordinates;
     }
 
     public int getLength() {
