@@ -16,63 +16,9 @@ files:
     visible: true
     learner_created: true
 feedback_link: https://hyperskill.org/learn/step/35309#comment
-status: Failed
+status: Solved
 feedback:
-  message: "Wrong answer in test #1\n\nno offer found to give the move to another\
-    \ player\n\nPlease find below the output of your program during this failed test.\n\
-    Note that the &#39;&gt;&#39; character indicates the beginning of the input line.\n\
-    \n---\n\nPlayer 1, place your ships on the game field\n\n  1 2 3 4 5 6 7 8 9 10\n\
-    A ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nB ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nC ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nD ~ ~ ~ ~\
-    \ ~ ~ ~ ~ ~ ~\nE ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nF ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nG ~ ~ ~ ~ ~ ~ ~ ~\
-    \ ~ ~\nH ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nI ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nJ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n\n\
-    Enter the coordinates of the Aircraft Carrier(5 cells):\n&gt; F3 F7\n\n  1 2 3\
-    \ 4 5 6 7 8 9 10\nA ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nB ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nC ~ ~ ~ ~ ~ ~\
-    \ ~ ~ ~ ~\nD ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nE ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nF ~ ~ O O O O O ~ ~ ~\n\
-    G ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nH ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nI ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nJ ~ ~ ~ ~\
-    \ ~ ~ ~ ~ ~ ~\n\nEnter the coordinates of the Battleship(4 cells):\n&gt; A1 D1\n\
-    \n  1 2 3 4 5 6 7 8 9 10\nA O ~ ~ ~ ~ ~ ~ ~ ~ ~\nB O ~ ~ ~ ~ ~ ~ ~ ~ ~\nC O ~\
-    \ ~ ~ ~ ~ ~ ~ ~ ~\nD O ~ ~ ~ ~ ~ ~ ~ ~ ~\nE ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nF ~ ~ O O O O\
-    \ O ~ ~ ~\nG ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nH ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nI ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n\
-    J ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n\nEnter the coordinates of the Submarine(3 cells):\n&gt;\
-    \ J7 J10\nError! Wrong length of the Submarine! Try again:\n&gt; J10 J8\n\n  1\
-    \ 2 3 4 5 6 7 8 9 10\nA O ~ ~ ~ ~ ~ ~ ~ ~ ~\nB O ~ ~ ~ ~ ~ ~ ~ ~ ~\nC O ~ ~ ~\
-    \ ~ ~ ~ ~ ~ ~\nD O ~ ~ ~ ~ ~ ~ ~ ~ ~\nE ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nF ~ ~ O O O O O ~\
-    \ ~ ~\nG ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nH ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nI ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nJ\
-    \ ~ ~ ~ ~ ~ ~ ~ O O O\n\nEnter the coordinates of the Cruiser(3 cells):\n&gt;\
-    \ B9 D8\nError! Wrong length of the Cruiser! Try again:\n&gt; B9 D9\n\n  1 2 3\
-    \ 4 5 6 7 8 9 10\nA O ~ ~ ~ ~ ~ ~ ~ ~ ~\nB O ~ ~ ~ ~ ~ ~ ~ O ~\nC O ~ ~ ~ ~ ~\
-    \ ~ ~ O ~\nD O ~ ~ ~ ~ ~ ~ ~ O ~\nE ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nF ~ ~ O O O O O ~ ~ ~\n\
-    G ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nH ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nI ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nJ ~ ~ ~ ~\
-    \ ~ ~ ~ O O O\n\nEnter the coordinates of the Destroyer(2 cells):\n&gt; E6 D6\n\
-    Error! You placed it too close to another one. Try again:\n&gt; I2 J2\n\n  1 2\
-    \ 3 4 5 6 7 8 9 10\nA O ~ ~ ~ ~ ~ ~ ~ ~ ~\nB O ~ ~ ~ ~ ~ ~ ~ O ~\nC O ~ ~ ~ ~\
-    \ ~ ~ ~ O ~\nD O ~ ~ ~ ~ ~ ~ ~ O ~\nE ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nF ~ ~ O O O O O ~ ~\
-    \ ~\nG ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nH ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nI ~ O ~ ~ ~ ~ ~ ~ ~ ~\nJ ~\
-    \ O ~ ~ ~ ~ ~ O O O\n\nPress Enter and pass the move to another player\n&gt; \n\
-    Enter the coordinates of the Aircraft Carrier(5 cells):\n&gt; H2 H6\n\n  1 2 3\
-    \ 4 5 6 7 8 9 10\nA ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nB ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nC ~ ~ ~ ~ ~ ~\
-    \ ~ ~ ~ ~\nD ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nE ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nF ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n\
-    G ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nH ~ O O O O O ~ ~ ~ ~\nI ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nJ ~ ~ ~ ~\
-    \ ~ ~ ~ ~ ~ ~\n\nEnter the coordinates of the Battleship(4 cells):\n&gt; F3 F6\n\
-    \n  1 2 3 4 5 6 7 8 9 10\nA ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nB ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nC ~ ~\
-    \ ~ ~ ~ ~ ~ ~ ~ ~\nD ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nE ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nF ~ ~ O O O O\
-    \ ~ ~ ~ ~\nG ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nH ~ O O O O O ~ ~ ~ ~\nI ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n\
-    J ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n\nEnter the coordinates of the Submarine(3 cells):\n&gt;\
-    \ H8 F8\n\n  1 2 3 4 5 6 7 8 9 10\nA ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nB ~ ~ ~ ~ ~ ~ ~ ~ ~\
-    \ ~\nC ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nD ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nE ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nF ~\
-    \ ~ O O O O ~ O ~ ~\nG ~ ~ ~ ~ ~ ~ ~ O ~ ~\nH ~ O O O O O ~ O ~ ~\nI ~ ~ ~ ~ ~\
-    \ ~ ~ ~ ~ ~\nJ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n\nEnter the coordinates of the Cruiser(3 cells):\n\
-    &gt; D4 D6\n\n  1 2 3 4 5 6 7 8 9 10\nA ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nB ~ ~ ~ ~ ~ ~ ~ ~\
-    \ ~ ~\nC ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nD ~ ~ ~ O O O ~ ~ ~ ~\nE ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nF\
-    \ ~ ~ O O O O ~ O ~ ~\nG ~ ~ ~ ~ ~ ~ ~ O ~ ~\nH ~ O O O O O ~ O ~ ~\nI ~ ~ ~ ~\
-    \ ~ ~ ~ ~ ~ ~\nJ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n\nEnter the coordinates of the Destroyer(2\
-    \ cells):\n&gt; D8 C8\n\n  1 2 3 4 5 6 7 8 9 10\nA ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nB ~ ~\
-    \ ~ ~ ~ ~ ~ ~ ~ ~\nC ~ ~ ~ ~ ~ ~ ~ O ~ ~\nD ~ ~ ~ O O O ~ O ~ ~\nE ~ ~ ~ ~ ~ ~\
-    \ ~ ~ ~ ~\nF ~ ~ O O O O ~ O ~ ~\nG ~ ~ ~ ~ ~ ~ ~ O ~ ~\nH ~ O O O O O ~ O ~ ~\n\
-    I ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nJ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n\nThe Game starts!\n\n  1 2 3 4\
-    \ 5 6 7 8 9 10\nA ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nB ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nC ~ ~ ~ ~ ~ ~ ~\
-    \ ~ ~ ~\nD ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nE ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nF ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\n\
-    G ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nH ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nI ~ ~ ~ ~ ~ ~ ~ ~ ~ ~\nJ ~ ~ ~ ~\
-    \ ~ ~ ~ ~ ~ ~\n\nTake a shot!"
-  time: "Mon, 10 Feb 2025 11:15:31 UTC"
+  message: Well done! You've finished the project. Select a new project on <a href="https://hyperskill.org/projects">Hyperskill</a>
+    to continue learning.
+  time: "Tue, 11 Feb 2025 12:14:50 UTC"
 record: -1

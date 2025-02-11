@@ -9,7 +9,7 @@ import java.util.Scanner;
 
  */
 public class Main {
-
+    private static final int GRID_SIZE = 10;
 
     enum ShipType {
         AIRCRAFT_CARRIER(5, "Aircraft Carrier"), BATTLESHIP(4, "Battleship"), SUBMARINE(3, "Submarine"), CRUISER(3, "Cruiser"), DESTROYER(2, "Destroyer");
@@ -20,14 +20,22 @@ public class Main {
             this.length = length;
             this.name = name;
         }
+
+        public int getLength() {
+            return length;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        String[][] visibleFieldOne = createField(10, 10);
-        String[][] fogOfWarFieldOne = createField(10, 10);
-        String[][] visibleFieldTwo = createField(10, 10);
-        String[][] fogOfWarFieldTwo = createField(10, 10);
+        String[][] visibleFieldOne = createField(GRID_SIZE, GRID_SIZE);
+        String[][] fogOfWarFieldOne = createField(GRID_SIZE, GRID_SIZE);
+        String[][] visibleFieldTwo = createField(GRID_SIZE, GRID_SIZE);
+        String[][] fogOfWarFieldTwo = createField(GRID_SIZE, GRID_SIZE);
 
         playGame(scanner, visibleFieldOne, fogOfWarFieldOne, visibleFieldTwo, fogOfWarFieldTwo);
         scanner.close();
@@ -37,22 +45,33 @@ public class Main {
      * Starts a fully fledged game
      *
      * @param scanner          {@link  Scanner} to be used for input
-     * @param visibleFieldOne  2D String array representing the visible field
-     * @param fogOfWarFieldOne 2D String array representing the fog of war field
+     * @param visibleFieldOne  2D String array representing the visible field of player one
+     * @param fogOfWarFieldOne 2D String array representing the fog of war field of player one
+     * @param visibleFieldTwo  2D String array representing the visible field of player two
+     * @param fogOfWarFieldTwo 2D String array representing the fog of war field of player two
      */
     static void playGame(Scanner scanner, String[][] visibleFieldOne, String[][] fogOfWarFieldOne, String[][] visibleFieldTwo, String[][] fogOfWarFieldTwo) {
         List<Ship> shipList = placeAllShips(scanner, visibleFieldOne, visibleFieldTwo);
-        List<Ship> playerOneShipList = shipList.subList(0, 4);
-        List<Ship> playerTwoShipList = shipList.subList(4, 9);
-        System.out.println("The Game starts!");
-        printField(fogOfWarFieldOne);
-        System.out.println("Take a shot!");
-        // TODO: need to alternate between the two players here
-        // TODO: need to alter the winning logic here to be to the sublist (all ships of one players sunk)
+        List<Ship> playerOneShipList = shipList.subList(0, 5);
+        List<Ship> playerTwoShipList = shipList.subList(5, 10);
+
+        boolean isPlayerOneTurn = true;
+        System.out.println("Player 1, it's your turn: ");
         do {
-            shootShip(scanner, visibleFieldOne, fogOfWarFieldOne, shipList);
-        } while (!shipList.stream().allMatch(Ship::isSunk)); // check if all ships have been sunk, if not, continue with the loop
-        System.out.println("You sank the last ship. You won. Congratulations!");
+            if (isPlayerOneTurn) {
+                printBothFields(fogOfWarFieldTwo, visibleFieldOne);
+                System.out.println("Player 1, it's your turn: ");
+                shootShip(scanner, visibleFieldTwo, fogOfWarFieldTwo, playerTwoShipList);
+            } else {
+                printBothFields(fogOfWarFieldOne, visibleFieldTwo);
+                System.out.println("Player 2, it's your turn: ");
+                shootShip(scanner, visibleFieldOne, fogOfWarFieldOne, playerOneShipList);
+            }
+            isPlayerOneTurn = !isPlayerOneTurn;
+            System.out.println("Press Enter and pass the move to another player");
+            String string = scanner.nextLine();
+        } while (!playerOneShipList.stream().allMatch(Ship::isSunk)
+                && !playerTwoShipList.stream().allMatch(Ship::isSunk)); // check if all ships of either player have been sunk, if not, continue with the loop
     }
 
     /**
@@ -78,13 +97,17 @@ public class Main {
                 if (visibleField[row][column].equals("O") || visibleField[row][column].equals("X")) {
                     visibleField[row][column] = "X";
                     fogOfWarField[row][column] = "X";
-                    printField(fogOfWarField); // TODO: need to print both fields (for player one and player two)
+                    printField(fogOfWarField); //
                     for (Ship ship : shipList) {
                         ShipCoordinates shipCoordinates = ship.getShipCoordinates();
                         if (row >= Math.min(shipCoordinates.getRowOne(), shipCoordinates.getRowTwo()) && row <= Math.max(shipCoordinates.getRowOne(), shipCoordinates.getRowTwo()) && column >= Math.min(shipCoordinates.getColumnOne(), shipCoordinates.getColumnTwo()) && column <= Math.max(shipCoordinates.getColumnOne(), shipCoordinates.getColumnTwo())) {
                             ship.registerHit();
                             if (ship.isSunk()) {
-                                System.out.println("You sank a ship! Specify a new target:");
+                                if (shipList.stream().allMatch(Ship::isSunk)) {
+                                    System.out.println("You sank the last ship. You won. Congratulations!");
+                                } else {
+                                    System.out.println("You sank a ship! Specify a new target:");
+                                }
                             } else {
                                 System.out.println("You hit a ship! Try again:");
                             }
@@ -128,6 +151,9 @@ public class Main {
         shipsList.add(inputShip(scanner, visibleFieldTwo, ShipType.SUBMARINE));
         shipsList.add(inputShip(scanner, visibleFieldTwo, ShipType.CRUISER));
         shipsList.add(inputShip(scanner, visibleFieldTwo, ShipType.DESTROYER));
+
+        System.out.println("Press Enter and pass the move to another player");
+        string = scanner.nextLine();
         return shipsList;
     }
 
@@ -139,13 +165,14 @@ public class Main {
      * @param shipType {@link ShipType} obj of the ship the user needs to place
      */
     static Ship inputShip(Scanner scanner, String[][] field, ShipType shipType) {
-        System.out.println("Enter the coordinates of the " + shipType.name + "(" + shipType.length + " cells):");
-        do {
+        System.out.println("Enter the coordinates of the " + shipType.getName() + "(" + shipType.getLength() + " cells):");
+
+        while (true) {
             ShipCoordinates coordinates = null;
             try {
                 coordinates = enterCoordinates(scanner, field, shipType);
             } catch (WrongLengthException e) {
-                System.out.println("Error! Wrong length of the " + shipType.name + "! Try again:");
+                System.out.println("Error! Wrong length of the " + shipType.getName() + "! Try again:");
             } catch (WrongLocationException e) {
                 System.out.println("Error! Wrong ship location! Try again:");
             } catch (AdjacentLocationException e) {
@@ -158,7 +185,7 @@ public class Main {
                 printField(field);
                 return ship;
             }
-        } while (true);
+        }
     }
 
     /**
@@ -184,7 +211,7 @@ public class Main {
 
         int length = Math.max(Math.abs(columnOne - columnTwo), Math.abs(rowOne - rowTwo)) + 1;
 
-        if (length != shipType.length) {
+        if (length != shipType.getLength()) {
             throw new WrongLengthException("Error! Wrong length");
         } else if (columnOne != columnTwo && rowOne != rowTwo) {
             throw new WrongLengthException("Error! Wrong ship location - needs to be in a straight line.");
@@ -262,7 +289,7 @@ public class Main {
                 shipParts.append((char) (rowOne + 'A')).append(col + 1).append(" ");
             }
         }
-        return new Ship(length, shipParts.toString(), shipCoordinates);
+        return new Ship(length, shipCoordinates);
     }
 
 
@@ -302,20 +329,31 @@ public class Main {
         }
         System.out.println();
     }
+
+    /**
+     * Prints both fields separated by a line
+     *
+     * @param playerTwoField 2D String Array of the top field (enemy)
+     * @param playerOneField 2D String Array of the bottom field (yours)
+     */
+    public static void printBothFields(String[][] playerTwoField, String[][] playerOneField) {
+        printField(playerTwoField);
+        System.out.println("---------------------");
+        printField(playerOneField);
+    }
 }
+
 
 /**
  * Helper class that contains ship information
  */
 class Ship {
     private final int length;
-    private final String parts;
     private ShipCoordinates shipCoordinates;
     private int hits;
 
-    public Ship(int length, String parts, ShipCoordinates shipCoordinates) {
+    public Ship(int length, ShipCoordinates shipCoordinates) {
         this.length = length;
-        this.parts = parts;
         this.shipCoordinates = shipCoordinates;
         this.hits = 0;
     }
@@ -334,15 +372,6 @@ class Ship {
 
     public int getLength() {
         return length;
-    }
-
-    public String getCoordinates() {
-        return parts;
-    }
-
-    @Override
-    public String toString() {
-        return "Ship Length: " + length + "\nParts: " + parts;
     }
 }
 

@@ -10,8 +10,8 @@
     <orderEntry type="jdk" jdkName="jbr-21" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Hyperskil-Battleship.Battleship_with_Java-task-build-classes-java.main" />
-    <orderEntry type="module" module-name="IntelliJ idea projects.Hyperskil-Battleship.util.main" />
-    <orderEntry type="module" module-name="IntelliJ idea projects.Hyperskil-Battleship.util.test" production-on-test="" />
+    <orderEntry type="module" module-name="IdeaProjects.Hyperskil-Battleship.util.main" />
+    <orderEntry type="module" module-name="IdeaProjects.Hyperskil-Battleship.util.test" production-on-test="" />
     <orderEntry type="library" name="Gradle: com.github.hyperskill:hs-test:release-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Gradle: org.assertj:assertj-swing-junit:3.17.1" level="project" />
     <orderEntry type="library" name="Gradle: junit:junit:4.13.2" level="project" />
